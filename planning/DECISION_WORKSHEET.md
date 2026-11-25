@@ -68,7 +68,7 @@ Options:
   - the UCI prototype data comes from an unnamed Italian city.
 
 [YOU WRITE: the city, the coordinates (45.46, 9.19) and why you chose it. Mark it as an assumption.]
-Answer :- Milan is therefore selected as the assumed location for the fictional client, Valdena, for the purposes of both UC1 and UC2, without making any assumptions about the unknown origin of the UCI prototype dataset.
+Answer :- Milan, Italy (45.46° N, 9.19° E) is selected as the study city. Milan was chosen because it is located in the Po Valley, a region that frequently experiences poor air quality, particularly during periods of atmospheric stagnation. The city also experiences hot summers, making it suitable for examining both air pollution and heat-related weather conditions using a single weather setting. Milan is therefore selected as the assumed location for the fictional client, Valdena, for the purposes of both UC1 and UC2, without making any assumptions about the unknown origin of the UCI prototype dataset.
 
 **B5. Disclose the two workarounds.** When: after P1b (backend) and after P3 (search fallback); Claude first lists the facts in chat. Goes into: decisions.md → "Other decisions", the README "Submission notes", and the PR description.
 
