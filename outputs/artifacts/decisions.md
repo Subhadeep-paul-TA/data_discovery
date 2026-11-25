@@ -7,7 +7,7 @@ One row per suggestion you accepted, rejected or revised, with your reason. Use 
 |---|---|---|---|
 | S1: Our World in Data on GitHub (data: Health Effects Institute, State of Global Air 2017), https://github.com/owid/owid-datasets/blob/master/datasets/Absolute%20deaths%20from%20ambient%20PM2.5%20air%20pollution-%20State%20of%20Global%20Air/datapackage.json | N6, prototype | accept | Links are working, and the data looks validated and truatable. |
 | S2: Our World in Data (IHME GBD), https://ourworldindata.org/grapher/absolute-number-of-deaths-from-ambient-particulate-air-pollution?tab=map | N6, prototype | accept | Links are working, and the data looks validated and truatable. |
-| S3: European Environment Agency, https://sdi.eea.europa.eu/catalogue/srv/api/records/258fa83c-dec6-4d88-b1fb-959f2d90008f | N6, prototype | reject | *(no reason given yet; asked on 2026-11-26)* |
+| S3: European Environment Agency, https://sdi.eea.europa.eu/catalogue/srv/api/records/258fa83c-dec6-4d88-b1fb-959f2d90008f | N6, prototype | reject | Link not working, redirects to different website completely unrealted. |
 | S4: Meteostat, station Milano/Linate (16080), https://meteostat.net/en/station/16080 | N3, prototype and production | accept | Links are working, and the data looks validated and truatable. |
 | S5: NOAA NCEI, Integrated Surface Database (ISD), https://www.ncei.noaa.gov/products/land-based-station/integrated-surface-database | N3, prototype and production | accept | Links are working, and the data looks validated and truatable. |
 
@@ -19,7 +19,7 @@ Host check (Step 2b item 5; manual `inspect_dataset_link` runs, saved in `output
 - S2: refused, `DOMAIN_NOT_ALLOWLISTED` for host `ourworldindata.org`.
 - S4: refused, `DOMAIN_NOT_ALLOWLISTED` for host `meteostat.net`.
 - S5: refused, `DOMAIN_NOT_ALLOWLISTED` for host `www.ncei.noaa.gov`.
-- G6 decision for these three hosts: pending (the learner decides; see "G6: Allowlist changes").
+- G6 decision for these three hosts: not added (see "G6: Allowlist changes").
 
 Inspected through the workflow (at least one accepted extra source):
 
@@ -41,6 +41,7 @@ Exact hosts only. For each host: what it provides and why a broader domain is no
 | | | | |
 
 Hosts you chose **not** to add, and why:
+- `ourworldindata.org` (S2), `meteostat.net` (S4), `www.ncei.noaa.gov` (S5): each refused with `DOMAIN_NOT_ALLOWLISTED` by `inspect_dataset_link` on 2026-11-26 (`outputs/artifacts/inspect_UC1_S2.txt`, `inspect_UC1_S4.txt`, `inspect_UC1_S5.txt`). Learner's decision, dictated on 2026-11-26 and transcribed word for word: "S2, S4, S5 :- don't add it. Reject all requests to S2, S4, S5."
 
 ## G5: Verdict calibration
 - What you changed in `prompts/risk_assessor.md`, and the reasoning behind each rule:
@@ -57,3 +58,4 @@ Hosts you chose **not** to add, and why:
 - **Related source or test checked:**
 
 ## Other decisions
+- **Open-Meteo location (assumption):** Milan, Italy (45.46° N, 9.19° E) is selected as the study city. Milan was chosen because it is located in the Po Valley, a region that frequently experiences poor air quality, particularly during periods of atmospheric stagnation. The city also experiences hot summers, making it suitable for examining both air pollution and heat-related weather conditions using a single weather setting. Milan is therefore selected as the assumed location for the fictional client, Valdena, for the purposes of both UC1 and UC2, without making any assumptions about the unknown origin of the UCI prototype dataset. *(The learner's answer to worksheet B4, transcribed word for word on 2026-11-26. The coordinates are set in `config/external_sources_register.json`, `api.open_meteo_archive.default_query`, commit `6e7da42`.)*
