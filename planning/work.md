@@ -89,7 +89,7 @@ Tick each box as it is finished (◐ = partly done). The "Session" column says w
 | ☑ | **P0** Planning: deep review and this file | — | Claude | S0 (bundle folder) | no |
 | ☑ | **P1** Repo and environment setup, `pytest_before.txt`, baseline commit. **Done and pushed 2026-11-23** | Task 1 | Claude (local) + you (push) | — | no |
 | ☑ | **P1b** Opt-in **Claude Code model backend** (no gateway credentials): build, smoke test, disclosure draft. **Done 2026-11-25** | setup for Tasks 2–10 | Claude implements, **you review the diff** | **NEW** (in REPO) | no (uses your Claude Code login) |
-| ☐ | **P2** Steps 0–2 for UC1 with the skill | Task 2 | Claude runs, **you confirm at STOPs** | **NEW, mandatory** (in REPO) | **yes** |
+| ☑ | **P2** Steps 0–2 for UC1 with the skill. **Done 2026-11-26** | Task 2 | Claude runs, **you confirm at STOPs** | **NEW, mandatory** (in REPO) | **yes** |
 | ☐ | **P3** Generate `scripts/web_search.py`, then Step 2b suggestions | Task 3 | Claude searches, **you decide each one** | same as P2 | **yes** (+ Gemini) |
 | ☐ | **P4** Close G1, G3, G4 | Task 5 | Claude implements, **you review diffs** | NEW (recommended) | no |
 | ☐ | **P5a** Inspect links without the LLM, G6 allowlist (can run right after P4) | Tasks 4 + 6 (G6) | Claude inspects, **you decide** | same as P4, or NEW | no |
@@ -104,8 +104,9 @@ Tick each box as it is finished (◐ = partly done). The "Session" column says w
 | ☐ | **P13** TC evidence, `pytest_after`, secret scan, rubric, PR, zip | Task 12 | Claude runs, **you mark Pass/Fail and submit** | NEW | yes (TC-018) |
 
 **Counters to watch.** Update these after every UC1 run (§12 explains why).
-- Refused events for the Chicago URL in `outputs/UC1/trace.jsonl`: **0** (must never exceed 2)
+- Refused events for the Chicago URL in `outputs/UC1/trace.jsonl`: **0** (must never exceed 2; checked 2026-11-26 after the P2 scout run)
 - Any other URL refused 2 or more times: none yet
+- `outputs/UC1/run_history.jsonl`: 1 invocation (P2 plan+scout): 5 LLM calls, 85,106 input / 11,396 output tokens, 39 tool calls
 
 **Snapshots taken** (in `outputs/artifacts/snapshots/`): none yet
 
@@ -123,6 +124,7 @@ Tick each box as it is finished (◐ = partly done). The "Session" column says w
 | 2026-11-25 | S0 continued | ready for P1b | You ticked B6 = No and rewrote B4: Milan is the assumed location of the fictional client Valdena for UC1 and UC2, with no assumption about the UCI data's city (this fixes the earlier problem). But the rewrite replaced the whole answer, so the coordinates and your reasons are gone. You said the B2 email facts are acceptable. Claude committed your worksheet edits locally. | Put your B4 reasons back (before P3); `git push`; start **P1b** in a NEW session in REPO. |
 | 2026-11-25 | S1 (Claude Code, in REPO) | P1b | Your B4 fix committed separately. Design approved with two decisions: effort `high` in `.env`; keep the CLI's account-email context, with mitigations. Built `discovery_agent/llm_claude_code.py`, `make_llm()` in `llm.py`, two lines in `orchestrator.py`. Probes before coding found three gaps, all fixed: inherited Claude Code session variables (`CLAUDE_EFFORT=max`), `@path` in piped text attaching local files, and the CLI's own context block. The first smoke run found a fourth: the model called agent tools natively and got "No such tool available" (fixed: preamble, plus a stream-json guard that retries). Checks: 44 offline checks with a fake CLI (scratchpad, not committed); pytest unchanged (20 failed, 32 passed); smoke test `--stop-after plan` into a temp folder: 2 `llm_call`, 1 tool call, submit accepted, no prompt text in the trace, no email in the files. `.env` created (3 lines, mode 600). B2 email facts listed in chat. | You: B2 email; check the Claude Code login (§1); `git push`. Then **P2** in a NEW session. |
 | 2026-11-26 | S1 continued | decisions | You kept the Claude Code login as it is (the CLI shows its account email to the agents; the mitigations stay) and decided not to send the instructor email (B2). Plan aligned: §1, §4, §5, §7 (disclosure, Step 2b), §13, §14 TC-018, §16, the RUN-prefix wording in §0 and P2, P2's "Needs" row, P3's commit message. Worksheet B2 still shows your earlier tick. | `git push` when you want; start **P2** in a NEW session. |
+| 2026-11-26 | S2 (Claude Code, in REPO) | P2 | Skill Steps 0–2 for UC1. Step 0: `step0_checks.md` (pytest 32 passed / 20 failed, all 20 in `test_learner_gaps.py`; 3 tool smoke tests return JSON; gateway variables unset, Claude Code backend recorded). Step 1: `validate-use-case UC1` OK; needs N1–N6 as in the contract. Step 2: plan+scout exit 0 (planner 2 turns, scout 3; 5 LLM calls, 39 tool calls, 0 errors, 0 HTTP, 0 refused; account-email check `0 0`). Scout read all 3 wiki pages and opened all 4 catalog entries; 4 of 30 internal searches had no hits (one parallel batch, none rephrased). Candidates: N1 production, N2, N4, N5 one each; N3 two (vendor expired); N6 and N1 prototype none; Nager not mapped. Noted for G7: both agents report the register's Milan coordinates as contradicting the brief's Lisbon sentence (stale after `6e7da42`); `unmet_needs` mixes unmet needs with caveats. `outputs/UC1/links.json` created once with `cp -n` from the prescribed links after your answer at the STOP. | **P3**: generate `scripts/web_search.py`, then Step 2b (same session or NEW). |
 
 ---
 

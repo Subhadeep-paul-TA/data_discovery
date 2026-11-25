@@ -1,0 +1,187 @@
+{
+  "candidates": [
+    {
+      "source_id": "internal.airq.station_readings",
+      "kind": "internal",
+      "title": "City station readings (hourly)",
+      "location": "azure://valdena-health/env/station_readings",
+      "need_ids": [
+        "N1"
+      ],
+      "target_windows": [
+        "production"
+      ],
+      "why_relevant": "Hourly NO2 and PM2.5 (ug/m3) from the city's own stations, keyed by station_id and ts_utc. Catalog coverage starts 2023-01-01 with no end date, last refreshed 2026-10-14, so it should span 2024-01-01 to 2025-12-31. Owner: Environment Monitoring Unit (access by request).",
+      "found_via": "search_internal_catalog('hourly air quality station readings NO2 PM2.5'); get_catalog_entry('airq.station_readings'); read_wiki_page('station_network')",
+      "suspected_issues": [
+        "Wiki station_network (last edited 2024-07-01): station VR-03 (Via Roma) was switched off on 2024-06-30 and has no readings after that date, yet the catalog still lists the network as active. Expect a station-level gap in the production window.",
+        "Timestamps are UTC (ts_utc). Traffic is in local time, so joining needs DST handling.",
+        "The catalog gives no missing-value rules, licence or station coordinates. A sensor-to-station key is not documented here.",
+        "Catalog says coverage starts 2023-01-01, so it cannot serve the 2004-2005 prototype window."
+      ],
+      "canonical_ref": null
+    },
+    {
+      "source_id": "internal.traffic.hourly_counts",
+      "kind": "internal",
+      "title": "Road traffic counts (hourly)",
+      "location": "azure://valdena-health/mobility/traffic_hourly",
+      "need_ids": [
+        "N2"
+      ],
+      "target_windows": [
+        "production"
+      ],
+      "why_relevant": "Hourly vehicle counts per road counter (counter_id, ts_local, vehicles) from counters near the monitoring stations. Catalog coverage starts 2021-01-01, refreshed 2026-10-12. Owner: Mobility Office (access by request). It is the only internal traffic source found.",
+      "found_via": "search_internal_catalog('hourly traffic counts vehicle flow'); get_catalog_entry('traffic.hourly_counts'); read_wiki_page('counter_replacement_2024')",
+      "suspected_issues": [
+        "Wiki counter_replacement_2024 (last edited 2024-04-02): counters were replaced on 2024-03-18. Before that, counts were per direction. From that date they are both directions combined. This creates a structural break inside the production window, and the catalog entry has no note about it.",
+        "ts_local is local time while the air-quality table uses UTC, so DST-day hours need care.",
+        "Neither the catalog nor the wiki shows a counter-to-station mapping or counter coordinates. N2 needs one, and none was found.",
+        "Outages recorded as zero versus missing is not documented."
+      ],
+      "canonical_ref": null
+    },
+    {
+      "source_id": "internal.clinic.resp_visits_daily",
+      "kind": "internal",
+      "title": "Respiratory visits (daily, by district)",
+      "location": "azure://valdena-health/clinic/resp_visits_daily",
+      "need_ids": [
+        "N4"
+      ],
+      "target_windows": [
+        "production"
+      ],
+      "why_relevant": "Daily respiratory visit counts per district (visit_date, district, visit_count), with no patient identifiers. Coverage starts 2022-01-01, refreshed daily. Owner: Clinical Analytics (access by request). The Data Protection Office policy names this as the only clinic table that may be used.",
+      "found_via": "search_internal_catalog('daily respiratory clinic visits by district'); get_catalog_entry('clinic.resp_visits_daily'); read_wiki_page('clinic_data_policy')",
+      "suspected_issues": [
+        "No respiratory case definition (diagnosis codes) is documented in the catalog or wiki.",
+        "Small-cell suppression rules and the lawful basis for sharing are not stated. Both are unknown.",
+        "Days with no rows could be clinic closures (weekends, holidays) or zero visits. This is unknown.",
+        "The district code list and boundaries are not documented.",
+        "About 40,000 rows is the catalog's approximate count. It has not been checked against 2024-2025 completeness."
+      ],
+      "canonical_ref": null
+    },
+    {
+      "source_id": "internal.clinic.patient_visits",
+      "kind": "internal",
+      "title": "Clinic visits (one row per patient visit)",
+      "location": "azure://valdena-health/clinic/patient_visits",
+      "need_ids": [
+        "N5"
+      ],
+      "target_windows": [
+        "production"
+      ],
+      "why_relevant": "This is the only patient-level (event) clinic table, so it is the candidate for N5. It is listed so the Risk Assessor can mark N5 as excluded. The brief and the DPO policy both rule it out. Do not sample it.",
+      "found_via": "search_internal_catalog('patient visit records clinic encounters'); get_catalog_entry('clinic.patient_visits'); read_wiki_page('clinic_data_policy')",
+      "suspected_issues": [
+        "Classification is restricted and contains_pii is true (patient_key, age_band and postcode are flagged personal). Access needs Data Protection Office approval.",
+        "Wiki clinic_data_policy (Data Protection Office, last edited 2025-02-01): patient-level records may not be used for this analysis, and postcode and age band must not leave the clinic systems.",
+        "No consent or lawful basis for secondary use is recorded in the catalog. This is unknown.",
+        "Do not use it to rebuild N4 counts. The owner would have to aggregate them, and clinic.resp_visits_daily already exists."
+      ],
+      "canonical_ref": null
+    },
+    {
+      "source_id": "api.open_meteo_archive",
+      "kind": "public_api",
+      "title": "Open-Meteo Historical Weather API (reanalysis)",
+      "location": "https://archive-api.open-meteo.com/v1/archive",
+      "need_ids": [
+        "N3"
+      ],
+      "target_windows": [
+        "prototype",
+        "production"
+      ],
+      "why_relevant": "Registered hourly weather archive covering both windows (2004-2005 and 2024-2025). Agreement status is not_required_open_data, and approved purposes are prototyping and production. Docs: https://open-meteo.com/en/docs/historical-weather-api. Terms: https://open-meteo.com/en/licence.",
+      "found_via": "list_external_register",
+      "suspected_issues": [
+        "Register default coordinates are 45.46, 9.19 (Milan), not Lisbon as the brief says. No source names the client's city, so a justified location must be chosen and recorded as an assumption.",
+        "The default hourly variables are temperature_2m,shortwave_radiation. Humidity must be requested explicitly as relative_humidity_2m.",
+        "The default timezone is UTC. It must be set explicitly to match the air-quality timestamps.",
+        "This is a gridded reanalysis model, not station observations.",
+        "The register says production is an approved purpose, but the policy entry says production use of any external dataset needs Legal sign-off. Both are recorded.",
+        "Keep probe ranges to a few days (register param_notes)."
+      ],
+      "canonical_ref": null
+    },
+    {
+      "source_id": "vendor.atmosdata_pro",
+      "kind": "vendor_feed",
+      "title": "AtmosData Pro station-grade weather feed (fictional vendor)",
+      "location": "https://api.atmosdata.example/v2/observations",
+      "need_ids": [
+        "N3"
+      ],
+      "target_windows": [
+        "production"
+      ],
+      "why_relevant": "A station-grade hourly weather feed registered for UC1 that could in principle serve N3. It is listed so the Risk Assessor can record it as unusable.",
+      "found_via": "list_external_register",
+      "suspected_issues": [
+        "agreement_status is expired. Contract AD-2021-114 ran 2022-01-01 to 2025-12-31, and renewal is waiting on Procurement with no signed renewal on file.",
+        "approved_purposes is empty.",
+        "The API key was revoked on 2026-01-01.",
+        "docs_url and terms_url are null, so licence and terms are unknown.",
+        "Do not look for another route to this data."
+      ],
+      "canonical_ref": null
+    }
+  ],
+  "searches_run": [
+    "hourly air quality station readings NO2 PM2.5",
+    "air monitoring station concentrations hourly",
+    "AQ station export / ARPA / centralina qualità dell'aria",
+    "pollutant measurements ug/m3 2024 2025",
+    "public air quality prototype dataset Italy 2004 2005",
+    "hourly traffic counts vehicle flow",
+    "traffic loop detector sensor export",
+    "ZTL / road sensor vehicle counts per hour",
+    "traffic near monitoring station mapping",
+    "mobility traffic volume 2024 2025",
+    "hourly temperature humidity weather",
+    "meteo station observations temperature relative humidity",
+    "weather data feed / reanalysis",
+    "AtmosData weather observations",
+    "local station meteorological readings",
+    "daily respiratory clinic visits by district",
+    "clinic attendance counts asthma COPD respiratory",
+    "visit counts per district per day",
+    "clinic visits aggregate report",
+    "health office surveillance respiratory ED visits",
+    "patient visit records clinic encounters",
+    "EHR clinic visit events patient level",
+    "patient-level respiratory visits",
+    "clinic encounter table consent",
+    "visit-level extract with patient id",
+    "deaths attributable to PM2.5 Italy annual",
+    "premature deaths air pollution national",
+    "burden of disease PM2.5 mortality",
+    "air pollution mortality statistics",
+    "annual PM2.5 attributable deaths context",
+    "list_external_register",
+    "get_catalog_entry: airq.station_readings, traffic.hourly_counts, clinic.resp_visits_daily, clinic.patient_visits",
+    "read_wiki_page: station_network, counter_replacement_2024, clinic_data_policy"
+  ],
+  "rejected_without_profiling": [
+    {
+      "source_id": "api.nager_public_holidays",
+      "reason": "The register lists it for UC1 (approved for prototyping and production), but none of N1 to N6 asks for holidays, so it serves no need. It could later help interpret clinic closure days in N4. Whether to add it as a feature is an open question for the human."
+    },
+    {
+      "source_id": "policy.open_data_links",
+      "reason": "This is a Legal policy for analyst-supplied dataset links, not a data source. It governs the external links for N1 (prototype) and N6: licence read at source, Legal review for login-gated, unknown or non-commercial licences, and Legal sign-off for production use."
+    }
+  ],
+  "unmet_needs": [
+    "N1 prototype window (2004-03-10 to 2005-04-04): no internal or register source holds public hourly air-quality readings from an Italian city (the internal catalog search returned no hits, and the register lists none). The human needs to supply a dataset link. A public research-repository dataset such as UCI is the likely type. The licence must be read at its source, and the -200 missing-value sentinel and sensor-response columns need checking. I cannot add link.* candidates myself.",
+    "N6 (national yearly deaths linked to PM2.5, both windows): nothing in the internal catalog or wiki, and no register entry. The human needs to supply a statistics-source link (WHO GHO, EEA, Eurostat, IHME GBD or Our World in Data). Italy must have annual values for 2004-2005 and ideally 2024-2025, which may not be published yet. The licence is unknown until read at the source, and production use needs Legal sign-off.",
+    "N3 station-grade alternative: only Open-Meteo (modelled reanalysis) is usable. AtmosData is expired and revoked, and no internal meteo table was found. If observations are required, the human needs to supply a link to a regional or national weather service open-data source.",
+    "N2 sensor-to-station mapping: traffic counts exist internally, but no table or wiki page gives counter coordinates or a link between counters and air stations. The owners (Mobility Office and Environment Monitoring Unit) need to be asked, or a mapping source supplied.",
+    "N4 documentation gaps: the daily counts table exists, but nothing documents the respiratory case definition, the small-count suppression rule or the lawful basis for sharing. These need confirming with Clinical Analytics and the Data Protection Office."
+  ]
+}
