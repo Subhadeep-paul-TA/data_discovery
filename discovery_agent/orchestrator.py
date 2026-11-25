@@ -20,7 +20,7 @@ from . import risk_rules
 from .agent import AgentFailed, run_agent
 from .agents import memo_spec, planner_spec, profiler_spec, risk_spec, scout_spec
 from .config import ROOT, load_allowlist, load_red_flags, load_settings, load_use_case
-from .llm import LLM, say
+from .llm import make_llm, say
 from .tools import ToolContext
 from .tools.http_client import HttpClient, host_allowed
 from .tools.links import canonical_ref, link_source_id
@@ -70,7 +70,7 @@ class Pipeline:
         self.trace = Trace(self.out / "trace.jsonl")
         self.http = HttpClient(self.settings, load_allowlist(), self.trace, use_cache=opts.use_cache)
         self.ctx = ToolContext(use_case=self.uc, settings=self.settings, http=self.http, trace=self.trace)
-        self.llm = llm or LLM(self.trace)
+        self.llm = llm or make_llm(self.trace)
         self.warnings: list[str] = []
         self.timings: dict[str, float] = {}
         self._ran_scout = False

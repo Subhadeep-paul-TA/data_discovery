@@ -3,6 +3,9 @@
 The SDK reads ANTHROPIC_BASE_URL and ANTHROPIC_AUTH_TOKEN from the environment, the
 same variables Claude Code uses in WSL. The model comes from DISCOVERY_MODEL, then
 ANTHROPIC_MODEL, then DEFAULT_MODEL.
+
+make_llm() returns this client, or the Claude Code CLI backend (llm_claude_code.py)
+when DISCOVERY_BACKEND=claude-code.
 """
 
 from __future__ import annotations
@@ -149,6 +152,19 @@ class LLM:
                     f"  [{agent}] stream dropped ({type(exc).__name__}); retrying {attempt}/{STREAM_ATTEMPTS - 1}"
                 )
                 time.sleep(STREAM_BACKOFF_S * 2 ** (attempt - 1))
+
+
+def make_llm(trace: Trace):
+    """The model client for a pipeline run: the gateway client above (default), or the Claude Code CLI
+    backend when DISCOVERY_BACKEND=claude-code (for runs without gateway credentials)."""
+    backend = os.environ.get("DISCOVERY_BACKEND", "").strip().lower()
+    if not backend:
+        return LLM(trace)
+    if backend == "claude-code":
+        from .llm_claude_code import ClaudeCodeLLM  # imported here, so the default path never loads it
+
+        return ClaudeCodeLLM(trace)
+    raise SystemExit(f"Unknown DISCOVERY_BACKEND={backend!r}. Leave it unset to use the gateway, or set it to 'claude-code'.")
 
 
 def say(text: str) -> None:

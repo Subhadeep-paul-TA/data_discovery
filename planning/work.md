@@ -71,16 +71,17 @@ outputs/UC1/trace.jsonl). Do not change any file until I confirm.
 ## 1. Status tracker
 Tick each box as it is finished (◐ = partly done). The "Session" column says whether a **new** Claude Code session is needed. "Needs gateway?" now means **needs a model**: the gateway, or the Claude Code backend from P1b.
 
-**Blockers and decisions (updated 2026-11-23):**
-1. **No gateway credentials → decided: use Claude through the Claude Code CLI** (§7 "No credentials: Claude Code backend"). A NEW session must first build and test the opt-in backend (**P1b**). Every phase that needs a model waits for P1b.
+**Blockers and decisions (updated 2026-11-25):**
+1. **No gateway credentials → decided: use Claude through the Claude Code CLI** (§7 "No credentials: Claude Code backend"). **P1b done 2026-11-25:** the opt-in backend is built and smoke-tested; `.env` selects it with `claude-sonnet-5-5` at effort `high`.
 2. **Pushed** (`main` and `work/data-discovery` are on GitHub). The repo is **still public**: make it private when you can (§6 "Status").
 3. **Decided 2026-11-23:**
    - Open-Meteo city = **Milan (45.46, 9.19)**, set in the repo by commit `6e7da42` (local only until you run `git push`).
    - Step 2b = **option B**: a disclosed Claude web-search fallback, verified to work (§7).
 
 **Your open to-dos:**
-- Worksheet A–C filled on 2026-11-25; B6 = No. **B4:** your new text dropped the coordinates and your reasons, and it now starts with "therefore"; put your earlier reasons back in front of it before P3 (see §2). B2: you said the email facts are acceptable; you write and send the email yourself. Sections D–N come with their phases.
-- Send the instructor email (worksheet B2).
+- Worksheet A–C filled; B6 = No; B4 fixed on 2026-11-25 (your reasons and the coordinates are back). Sections D–N come with their phases.
+- Send the instructor email (worksheet B2). The facts it needs were listed in the P1b session chat (2026-11-25); you write the email.
+- Check which claude.ai account Claude Code is logged into (`claude auth status`). Its email is **not** the address you named for D2 in P1b, and the CLI shows that account's address to the agents (§7 "As built"). Keep it, or log in with your own account: your call.
 - Run `git push` from `~/projects/data-discovery` (you chose: push now, make it private later).
 - The Milan entry for `outputs/artifacts/decisions.md` → "Other decisions" is your B4 text; Claude transcribes it when decisions.md is first edited (P3 or later).
 
@@ -88,7 +89,7 @@ Tick each box as it is finished (◐ = partly done). The "Session" column says w
 |---|---|---|---|---|---|
 | ☑ | **P0** Planning: deep review and this file | — | Claude | S0 (bundle folder) | no |
 | ☑ | **P1** Repo and environment setup, `pytest_before.txt`, baseline commit. **Done and pushed 2026-11-23** | Task 1 | Claude (local) + you (push) | — | no |
-| ☐ | **P1b** Opt-in **Claude Code model backend** (no gateway credentials): build, smoke test, disclosure draft | setup for Tasks 2–10 | Claude implements, **you review the diff** | **NEW** (in REPO) | no (uses your Claude Code login) |
+| ☑ | **P1b** Opt-in **Claude Code model backend** (no gateway credentials): build, smoke test, disclosure draft. **Done 2026-11-25** | setup for Tasks 2–10 | Claude implements, **you review the diff** | **NEW** (in REPO) | no (uses your Claude Code login) |
 | ☐ | **P2** Steps 0–2 for UC1 with the skill | Task 2 | Claude runs, **you confirm at STOPs** | **NEW, mandatory** (in REPO) | **yes** |
 | ☐ | **P3** Generate `scripts/web_search.py`, then Step 2b suggestions | Task 3 | Claude searches, **you decide each one** | same as P2 | **yes** (+ Gemini) |
 | ☐ | **P4** Close G1, G3, G4 | Task 5 | Claude implements, **you review diffs** | NEW (recommended) | no |
@@ -121,6 +122,7 @@ Tick each box as it is finished (◐ = partly done). The "Session" column says w
 | 2026-11-25 | S0 continued | planning | Moved the plan (`work.md`), the review notes (`work_notes/`) and a copy of `Important_links.md` from BUNDLE into `REPO/planning/`, so they are versioned and pushed; BUNDLE keeps only a pointer `work.md`. Added `planning/DECISION_WORKSHEET.md` (every decision, with options to tick and [YOU WRITE] placeholders). The repo is still public; Claude pushed nothing. | Fill the worksheet (A–C now); decide visibility; `git push`; then P1b in a NEW session. |
 | 2026-11-25 | S0 continued | worksheet check | You filled A–C: push now and make private later (B1); email the instructor, with no disclosure text in the deliverables (B2, B5); agents on `claude-sonnet-5-5` (B3); Milan reason written (B4); Step 0 answer (C1); needs table and the three links confirmed (C2, C3). Claude aligned the plan (§7, P1b `.env` and facts list, P3 note, §16) and flagged three items: the B4 sentence about the UCI city, B6 unticked, and the B2 email not yet written. | Revise B4 if you agree; tick B6; send the email; `git push`; then P1b. |
 | 2026-11-25 | S0 continued | ready for P1b | You ticked B6 = No and rewrote B4: Milan is the assumed location of the fictional client Valdena for UC1 and UC2, with no assumption about the UCI data's city (this fixes the earlier problem). But the rewrite replaced the whole answer, so the coordinates and your reasons are gone. You said the B2 email facts are acceptable. Claude committed your worksheet edits locally. | Put your B4 reasons back (before P3); `git push`; start **P1b** in a NEW session in REPO. |
+| 2026-11-25 | S1 (Claude Code, in REPO) | P1b | Your B4 fix committed separately. Design approved with two decisions: effort `high` in `.env`; keep the CLI's account-email context, with mitigations. Built `discovery_agent/llm_claude_code.py`, `make_llm()` in `llm.py`, two lines in `orchestrator.py`. Probes before coding found three gaps, all fixed: inherited Claude Code session variables (`CLAUDE_EFFORT=max`), `@path` in piped text attaching local files, and the CLI's own context block. The first smoke run found a fourth: the model called agent tools natively and got "No such tool available" (fixed: preamble, plus a stream-json guard that retries). Checks: 44 offline checks with a fake CLI (scratchpad, not committed); pytest unchanged (20 failed, 32 passed); smoke test `--stop-after plan` into a temp folder: 2 `llm_call`, 1 tool call, submit accepted, no prompt text in the trace, no email in the files. `.env` created (3 lines, mode 600). B2 email facts listed in chat. | You: B2 email; check the Claude Code login (§1); `git push`. Then **P2** in a NEW session. |
 
 ---
 
@@ -416,25 +418,46 @@ No Tiger AI Gateway credentials were provided. **Your decision:** use Claude ins
   - `--system-prompt-file` is not listed, so the system prompt is passed inline. The prompts are a few KB, below Linux's 128 KB limit per argument.
 - One test call ran from an empty temp folder (no tools, no MCP, replaced system prompt, JSON schema):
   - `structured_output` came back correctly;
-  - the whole prompt was about 1.3k tokens, so no CLAUDE.md, memory or work.md leaked in;
+  - the whole prompt was about 1.3k tokens, so no CLAUDE.md, memory or work.md leaked in (correction 2026-11-25: the CLI still adds a small context block of its own; see "As built" below);
   - model `claude-opus-5-5`; about 2 seconds.
 - `--bare` would isolate even more, but it accepts only `ANTHROPIC_API_KEY`, not your claude.ai login, so it cannot be used.
 
-**Design for P1b** (full instructions in the P1b prompt, §9)
-- New file `discovery_agent/llm_claude_code.py` (stdlib only) with the same `complete(...)` interface as `llm.LLM`. It:
-  - renders the tool list (name, description, `input_schema`) and the whole conversation (tool calls and tool results);
-  - calls `claude -p` in an empty temp folder;
-  - parses `structured_output` = `{"text", "tool_calls":[{"name","input"}]}` into SDK-like blocks;
-  - writes the same `llm_call` / `llm_retry` trace events, with the model shown as `claude-code:<model>`.
-- A small factory picks it only when `DISCOVERY_BACKEND=claude-code`. The default gateway path, the tests (still 52) and `config/` are unchanged.
-- `.env` then holds `export DISCOVERY_BACKEND=claude-code` and `export DISCOVERY_MODEL=claude-sonnet-5-5` (worksheet B3), plus optionally `export DISCOVERY_EFFORT=<level>`. The three gateway variables stay unset.
+**As built (P1b, 2026-11-25, Claude Code 2.1.316)**
+- **Files.** `discovery_agent/llm_claude_code.py` (stdlib only, same `complete(...)` interface as `llm.LLM`); `make_llm(trace)` in `llm.py`; `orchestrator.py` builds its LLM through `make_llm`.
+  - `DISCOVERY_BACKEND` unset: `LLM(trace)`, exactly as before.
+  - `claude-code`: the adapter. Any other value stops the run.
+  - Tests (still 52) and `config/` unchanged.
+- **One model call** = `claude -p --output-format stream-json --verbose --tools "" --strict-mcp-config --setting-sources "" --safe-mode --no-session-persistence --system-prompt <agent prompt> --json-schema <reply schema> --model $DISCOVERY_MODEL --effort $DISCOVERY_EFFORT`.
+  - Runs in a fresh empty temp folder, with a 600 s timeout.
+  - `--setting-sources ""` loads none of your settings files (checked in the CLI code); `--safe-mode` turns off CLAUDE.md, skills, plugins and hooks.
+- **Child environment.** Yours minus every `CLAUDE*` and `ANTHROPIC_*` variable (keeps `CLAUDE_CONFIG_DIR` and `CLAUDE_CODE_OAUTH_TOKEN`), plus `CLAUDE_CODE_MAX_OUTPUT_TOKENS=<max_tokens>` and `DISABLE_AUTOUPDATER=1`.
+  - Why: a Claude Code session that starts the pipeline exports `CLAUDE_EFFORT=max` and `CLAUDE_CODE_CHILD_SESSION=1`.
+- **stdin.** A protocol-only preamble, then the tools and the conversation as JSON (Messages format), then the reply instruction.
+  - Every `@` is written as `@`: the CLI turns `@<path>` in piped text into a local file attachment (verified with a canary file).
+  - `@` in the system prompt is not expanded (verified).
+- **Reply.** `{"text", "tool_calls": [{"name": <enum of the agent's tools>, "input": object}]}`, sent through the CLI's StructuredOutput tool.
+  - Tool inputs are free-form, so the pipeline's validators stay the only judge, and rejected submissions still reach the trace.
+- **Native tool calls.** If the model calls an agent tool directly inside the CLI, it sees a fake "No such tool available". The reply is then discarded and the call repeated (`llm_retry` code `native_tool_call`).
+  - The preamble prevents it: 4 of 4 replays clean after the fix. Before the fix it happened in the first smoke run.
+- **Errors.**
+  - A refusal, and a max_tokens cut (the CLI reports "exceeded the N output token maximum"), go to the agent loop as `stop_reason` `refusal` / `max_tokens`, as on the gateway.
+  - Login errors, a usage limit, 403 and 404 stop the run. A 400 or "prompt too long" fails the agent at once.
+  - Anything else is retried 3 times (2/4/8 s), then `LLMError`.
+- **Trace.** The same `llm_call` event as `llm.py`: model `claude-code:claude-sonnet-5-5`, and `input_tokens` include cache writes. `llm_retry` carries only a short code. The model label also appears in `run_summary.json`, `discovery_results.json` and the memo's human-gate line.
+- **Context the CLI always adds** (a claude.ai login cannot switch it off): the login's email address, an Environment note (temp folder, OS), the model name and today's date.
+  - The preamble tells the model to ignore it; after each run, check the outputs for the email (§18).
+  - The login on this machine is not your own address (§1).
+- **`.env`** (worksheet B3, and P1b decision 2026-11-25): `export DISCOVERY_BACKEND=claude-code`, `export DISCOVERY_MODEL=claude-sonnet-5-5`, `export DISCOVERY_EFFORT=high`.
+  - `high` is the API's default for this model; pinning it stops a CLI update from changing it between P6 and P8.
+  - The three gateway variables stay unset.
 
 **Consequences**
 - Skill Step 0 will report the three gateway variables as `False`. That is expected. Answer its STOP with "intentional: Claude Code backend", and record the backend instead of a gateway model id in `step0_checks.md`.
 - TC-018 can now run, because no token is needed.
 - **Usage limits.** Every call uses your claude.ai plan; we hit its 5-hour limit once while planning.
   - Run stage by stage (`--stop-after`, `--only`).
-  - **Decided (worksheet B3): `DISCOVERY_MODEL=claude-sonnet-5-5`** for the agents. Keep the same model for every scored run (P6–P8), so before/after comparisons stay fair.
+  - **Decided (worksheet B3): `DISCOVERY_MODEL=claude-sonnet-5-5`** for the agents, at effort `high`. Keep the same model and effort for every scored run (P6–P8), so before/after comparisons stay fair.
+  - A usage limit stops the run with the CLI's message. Re-run that stage after the reset.
 - **Disclosure (your decision, worksheet B2 and B5):** you email the instructor about both workarounds; the deliverables get no separate disclosure paragraph. Where a question asks about it directly, answer truthfully: the README reuse-check question "what was missing", and the rubric's AI-Native Skill row about `scripts/web_search.py`. The backend is visible anyway in the code diff and in the trace (model `claude-code:<model>`).
 
 **Step 2b (P3) without the gateway: decided 2026-11-23 → option B**
@@ -518,6 +541,7 @@ Dependencies:
 | You review | The agent loop, tools, validators, trace and transcripts are unchanged. The default path behaves as before. The tests are still 52 collected (20 failed, 32 passed before the gaps). Each call runs in an empty temp folder with no tools and no MCP. The trace shows `llm_call` events with token counts. The prompt text is never written to the trace. |
 | Done when | The smoke test (`--stop-after plan` into a mktemp `--out` folder) produces `search_plan.json`, `llm_call` trace events and a normal-looking planner transcript |
 | Commit | "P1b: opt-in Claude Code model backend (no gateway credentials)" |
+| Status 2026-11-25 | **Done.** What was built and what the checks found: §7 "As built" and §2. |
 
 **Prompt (paste into the new session):**
 ```
@@ -847,7 +871,7 @@ code .                                                    # NEW Claude Code sess
 |---|---|
 | Who | Claude runs every TC command and collects the outputs. **You** paste them, mark Pass/Fail, fill Sheet 1, create the PR and submit. |
 | Session | **NEW** |
-| Steps | 1. `python -m pytest tests/ -q > outputs/artifacts/pytest_after.txt 2>&1` (expect **52 passed**). 2. TC-018 in a **throwaway copy** (prompt "Reproduce rubric TC-018 safely" in `planning/work_notes/review_orchestrator_gate_check_signoff.md`), saved to `outputs/artifacts/tc018_gate_runs.txt`. 3. TC-023 vendor check and TC-024 secret scan (§15). 4. Re-run `check UC1` and `check UC2` and re-save them. 5. Collect the actual outputs for every TC in §14 into `outputs/artifacts/rubric_evidence.md`. 6. Copy the rubric xlsx from BUNDLE into the REPO root; you fill both sheets (in Excel, or Claude fills only the "Actual Output" column with openpyxl and you check it). 7. Per worksheet N3, first archive and remove `planning/` (`git branch planning-archive && git rm -r -q planning && git commit -m "Remove planning notes from the submission"`; also push `planning-archive` if you want the notes kept on GitHub). Then push and open the PR (§6), add the instructor, paste the PR URL into rubric cell D11, commit and push again. 8. Build the zip (§15), verify it, and submit to Tiger Academy (Paradiso). |
+| Steps | 1. `python -m pytest tests/ -q > outputs/artifacts/pytest_after.txt 2>&1` (expect **52 passed**). 2. TC-018 in a **throwaway copy** (prompt "Reproduce rubric TC-018 safely" in `planning/work_notes/review_orchestrator_gate_check_signoff.md`), saved to `outputs/artifacts/tc018_gate_runs.txt`. 3. TC-023 vendor check, TC-024 secret scan (§15) and the account-email check on `outputs/` (§18, expect `0 0`). 4. Re-run `check UC1` and `check UC2` and re-save them. 5. Collect the actual outputs for every TC in §14 into `outputs/artifacts/rubric_evidence.md`. 6. Copy the rubric xlsx from BUNDLE into the REPO root; you fill both sheets (in Excel, or Claude fills only the "Actual Output" column with openpyxl and you check it). 7. Per worksheet N3, first archive and remove `planning/` (`git branch planning-archive && git rm -r -q planning && git commit -m "Remove planning notes from the submission"`; also push `planning-archive` if you want the notes kept on GitHub). Then push and open the PR (§6), add the instructor, paste the PR URL into rubric cell D11, commit and push again. 8. Build the zip (§15), verify it, and submit to Tiger Academy (Paradiso). |
 | Done when | The zip is uploaded, the PR URL is in the rubric, and the token scan is clean |
 
 ---
@@ -1272,6 +1296,8 @@ python -c "import json,sys;[print(e['agent'],e['errors']) for e in map(json.load
 python -c "import json,sys,re;print(sorted({re.sub(r'^https?://([^/]+).*$',r'\1',e['url']) for e in map(json.loads,open(sys.argv[1])) if e['kind']=='http' and not e.get('refused')}))" $T
 # the vendor feed must never be fetched (expect no output)
 grep -n '"kind": "http".*atmosdata' $T
+# no account email in a run's files (the Claude Code backend shows the login's address to the model, §7); expect "0 0"
+python -c "import json,pathlib,sys;a=(json.loads((pathlib.Path.home()/'.claude.json').read_text()).get('oauthAccount') or {}).get('emailAddress','').lower();t='\n'.join(p.read_text(errors='replace') for p in pathlib.Path(sys.argv[1]).rglob('*') if p.is_file()).lower();print(t.count(a) if a else 'n/a',t.count('@tigeranalytics'))" outputs/UC1
 # model usage over all invocations (for the delivery reflection); inspect the keys first
 python -c "import json,sys;rows=[json.loads(l) for l in open(sys.argv[1])];print(len(rows),'invocations; keys:',list(rows[-1].keys()));t=[r.get('totals',{}) for r in rows];print({k:sum(x.get(k,0) for x in t) for k in ('llm_calls','input_tokens','output_tokens','tool_calls')})" outputs/UC1/run_history.jsonl
 ```
