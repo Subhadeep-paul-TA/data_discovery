@@ -79,7 +79,7 @@ Tick each box as it is finished (◐ = partly done). The "Session" column says w
    - Step 2b = **option B**: a disclosed Claude web-search fallback, verified to work (§7).
 
 **Your open to-dos:**
-- Worksheet A–C filled on 2026-11-25. Still open now: tick **B6**, write the **B2 email**, and review your **B4** wording (see §2, 2026-11-25). Sections D–N come with their phases.
+- Worksheet A–C filled on 2026-11-25; B6 = No. **B4:** your new text dropped the coordinates and your reasons, and it now starts with "therefore"; put your earlier reasons back in front of it before P3 (see §2). B2: you said the email facts are acceptable; you write and send the email yourself. Sections D–N come with their phases.
 - Send the instructor email (worksheet B2).
 - Run `git push` from `~/projects/data-discovery` (you chose: push now, make it private later).
 - The Milan entry for `outputs/artifacts/decisions.md` → "Other decisions" is your B4 text; Claude transcribes it when decisions.md is first edited (P3 or later).
@@ -120,6 +120,7 @@ Tick each box as it is finished (◐ = partly done). The "Session" column says w
 | 2026-11-23 | S0 continued | decisions | You pushed `main` and `work/data-discovery`, and chose **Milan** and **Step 2b option B**. Claude set the Open-Meteo coordinates to 45.46 / 9.19 (only those two lines changed) and committed `6e7da42` locally. Option B tested: a headless `claude -p --tools WebSearch --allowedTools WebSearch` call returned an answer with 3 cited URLs, no permission denials, about 13 s. A lead from that search: Open-Meteo's terms of use may limit the free API to non-commercial use, which matters for UC2 (verify at source; §11). | `git push`; write your Milan reason in decisions.md; start **P1b** in a NEW session in REPO. |
 | 2026-11-25 | S0 continued | planning | Moved the plan (`work.md`), the review notes (`work_notes/`) and a copy of `Important_links.md` from BUNDLE into `REPO/planning/`, so they are versioned and pushed; BUNDLE keeps only a pointer `work.md`. Added `planning/DECISION_WORKSHEET.md` (every decision, with options to tick and [YOU WRITE] placeholders). The repo is still public; Claude pushed nothing. | Fill the worksheet (A–C now); decide visibility; `git push`; then P1b in a NEW session. |
 | 2026-11-25 | S0 continued | worksheet check | You filled A–C: push now and make private later (B1); email the instructor, with no disclosure text in the deliverables (B2, B5); agents on `claude-sonnet-5-5` (B3); Milan reason written (B4); Step 0 answer (C1); needs table and the three links confirmed (C2, C3). Claude aligned the plan (§7, P1b `.env` and facts list, P3 note, §16) and flagged three items: the B4 sentence about the UCI city, B6 unticked, and the B2 email not yet written. | Revise B4 if you agree; tick B6; send the email; `git push`; then P1b. |
+| 2026-11-25 | S0 continued | ready for P1b | You ticked B6 = No and rewrote B4: Milan is the assumed location of the fictional client Valdena for UC1 and UC2, with no assumption about the UCI data's city (this fixes the earlier problem). But the rewrite replaced the whole answer, so the coordinates and your reasons are gone. You said the B2 email facts are acceptable. Claude committed your worksheet edits locally. | Put your B4 reasons back (before P3); `git push`; start **P1b** in a NEW session in REPO. |
 
 ---
 
