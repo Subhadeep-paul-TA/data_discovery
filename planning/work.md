@@ -79,9 +79,10 @@ Tick each box as it is finished (◐ = partly done). The "Session" column says w
    - Step 2b = **option B**: a disclosed Claude web-search fallback, verified to work (§7).
 
 **Your open to-dos:**
-- Fill in `planning/DECISION_WORKSHEET.md` as far as you can now (sections A–C; the rest when each phase comes).
-- Decide the repo's visibility (worksheet B1), then run `git push` from `~/projects/data-discovery`. That uploads `6e7da42` and the `planning/` commit.
-- Write the Milan entry, with **your own reason**, under `outputs/artifacts/decisions.md` → "Other decisions" (any time before P6; worksheet B4).
+- Worksheet A–C filled on 2026-11-25. Still open now: tick **B6**, write the **B2 email**, and review your **B4** wording (see §2, 2026-11-25). Sections D–N come with their phases.
+- Send the instructor email (worksheet B2).
+- Run `git push` from `~/projects/data-discovery` (you chose: push now, make it private later).
+- The Milan entry for `outputs/artifacts/decisions.md` → "Other decisions" is your B4 text; Claude transcribes it when decisions.md is first edited (P3 or later).
 
 | ☐/☑ | Phase | Assignment task | Main owner | Session | Needs gateway? |
 |---|---|---|---|---|---|
@@ -118,6 +119,7 @@ Tick each box as it is finished (◐ = partly done). The "Session" column says w
 | 2026-11-23 | S0 continued | P1b plan | You chose to use Claude instead of gateway credentials, and to push now (the repo stays public until you change it). Verified that Claude Code 2.1.316 supports an isolated headless backend (`-p`, `--system-prompt`, `--tools ""`, `--json-schema`, `--strict-mcp-config`, `--no-session-persistence`, `--effort`). One test call from an empty temp folder succeeded: structured JSON returned, about 1.3k prompt tokens (so no CLAUDE.md or memory leaked in), model claude-opus-5-5. `--bare` cannot be used: it ignores the claude.ai login. City recommendation: Milan (awaiting your confirmation). | You push (§6). Then a NEW session in REPO runs **P1b** (prompt in §9). |
 | 2026-11-23 | S0 continued | decisions | You pushed `main` and `work/data-discovery`, and chose **Milan** and **Step 2b option B**. Claude set the Open-Meteo coordinates to 45.46 / 9.19 (only those two lines changed) and committed `6e7da42` locally. Option B tested: a headless `claude -p --tools WebSearch --allowedTools WebSearch` call returned an answer with 3 cited URLs, no permission denials, about 13 s. A lead from that search: Open-Meteo's terms of use may limit the free API to non-commercial use, which matters for UC2 (verify at source; §11). | `git push`; write your Milan reason in decisions.md; start **P1b** in a NEW session in REPO. |
 | 2026-11-25 | S0 continued | planning | Moved the plan (`work.md`), the review notes (`work_notes/`) and a copy of `Important_links.md` from BUNDLE into `REPO/planning/`, so they are versioned and pushed; BUNDLE keeps only a pointer `work.md`. Added `planning/DECISION_WORKSHEET.md` (every decision, with options to tick and [YOU WRITE] placeholders). The repo is still public; Claude pushed nothing. | Fill the worksheet (A–C now); decide visibility; `git push`; then P1b in a NEW session. |
+| 2026-11-25 | S0 continued | worksheet check | You filled A–C: push now and make private later (B1); email the instructor, with no disclosure text in the deliverables (B2, B5); agents on `claude-sonnet-5-5` (B3); Milan reason written (B4); Step 0 answer (C1); needs table and the three links confirmed (C2, C3). Claude aligned the plan (§7, P1b `.env` and facts list, P3 note, §16) and flagged three items: the B4 sentence about the UCI city, B6 unticked, and the B2 email not yet written. | Revise B4 if you agree; tick B6; send the email; `git push`; then P1b. |
 
 ---
 
@@ -176,6 +178,8 @@ Please answer these before or at the phase shown. Each has a default if you don'
 | Step 2b | **Option B** (decided 2026-11-23) | `scripts/web_search.py` = the README prompt plus the fallback sentence in §9-P3. Disclose it in decisions.md, the README notes and the PR. |
 
 **Still open:** Q6, Q7 (default: no UC3), Q11–Q13 (default: yes). Q2 applies only if gateway credentials arrive later.
+
+From 2026-11-25, your decisions live in `planning/DECISION_WORKSHEET.md`. So far: B3 = agents on `claude-sonnet-5-5`; B2 = the instructor is told by email.
 
 | # | Question | Blocks | Default if unanswered |
 |---|---|---|---|
@@ -422,15 +426,15 @@ No Tiger AI Gateway credentials were provided. **Your decision:** use Claude ins
   - parses `structured_output` = `{"text", "tool_calls":[{"name","input"}]}` into SDK-like blocks;
   - writes the same `llm_call` / `llm_retry` trace events, with the model shown as `claude-code:<model>`.
 - A small factory picks it only when `DISCOVERY_BACKEND=claude-code`. The default gateway path, the tests (still 52) and `config/` are unchanged.
-- `.env` then holds `export DISCOVERY_BACKEND=claude-code`, plus optionally `export DISCOVERY_MODEL=<model>` and `export DISCOVERY_EFFORT=<level>`. The three gateway variables stay unset.
+- `.env` then holds `export DISCOVERY_BACKEND=claude-code` and `export DISCOVERY_MODEL=claude-sonnet-5-5` (worksheet B3), plus optionally `export DISCOVERY_EFFORT=<level>`. The three gateway variables stay unset.
 
 **Consequences**
 - Skill Step 0 will report the three gateway variables as `False`. That is expected. Answer its STOP with "intentional: Claude Code backend", and record the backend instead of a gateway model id in `step0_checks.md`.
 - TC-018 can now run, because no token is needed.
 - **Usage limits.** Every call uses your claude.ai plan; we hit its 5-hour limit once while planning.
   - Run stage by stage (`--stop-after`, `--only`).
-  - If limits bite, consider `DISCOVERY_MODEL=claude-sonnet-5-5` for the agents. It is cheaper, but agent quality feeds the 40-point auto-score, so it is your call.
-- **Disclosure (required for honesty):** state the deviation in `decisions.md` → "Other decisions", in the README Submission notes (as a missing input), and in the PR description. Telling the instructor is recommended.
+  - **Decided (worksheet B3): `DISCOVERY_MODEL=claude-sonnet-5-5`** for the agents. Keep the same model for every scored run (P6–P8), so before/after comparisons stay fair.
+- **Disclosure (your decision, worksheet B2 and B5):** you email the instructor about both workarounds; the deliverables get no separate disclosure paragraph. Where a question asks about it directly, answer truthfully: the README reuse-check question "what was missing", and the rubric's AI-Native Skill row about `scripts/web_search.py`. The backend is visible anyway in the code diff and in the trace (model `claude-code:<model>`).
 
 **Step 2b (P3) without the gateway: decided 2026-11-23 → option B**
 - **A. Strict reading of the README.**
@@ -440,7 +444,7 @@ No Tiger AI Gateway credentials were provided. **Your decision:** use Claude ins
 - **B. Disclosed fallback.**
   - Generate the script from the README prompt, plus one added sentence (it is in the P3 section): when the gateway variables are missing, the script runs `claude -p` with only the WebSearch tool and a JSON schema, then prints the answer and the cited URLs.
   - Step 2b still calls *your* script, and every suggestion still has a citation.
-  - The search engine differs from the README (Claude web search instead of Gemini), and the script uses Claude Code's web search internally. Disclose this, and ideally get the instructor's OK.
+  - The search engine differs from the README (Claude web search instead of Gemini), and the script uses Claude Code's web search internally. You tell the instructor in your email (worksheet B2).
 - **Decided: B, with disclosure.**
   - Feasibility verified 2026-11-23: `claude -p --output-format json --tools WebSearch --allowedTools WebSearch --strict-mcp-config --no-session-persistence --json-schema …`, run from an empty temp folder, returned an answer and 3 cited URLs. There were no permission denials, and it took about 13 s.
   - Keep `--allowedTools WebSearch` next to `--tools WebSearch`, so headless mode cannot block the search; the tested command used both.
@@ -509,7 +513,7 @@ Dependencies:
 | Who | Claude designs and implements. **You** approve the design and review the diff. |
 | Session | **NEW**, opened in REPO (`code ~/projects/data-discovery`, select the `.venv` interpreter) |
 | Needs | P1 done (pushing is not required for P1b). Your Claude Code login. |
-| Produces | `discovery_agent/llm_claude_code.py`; a small backend switch (factory) where the pipeline builds its LLM; `.env` with `export DISCOVERY_BACKEND=claude-code` (gitignored); a smoke-test run in a temp folder (never in `outputs/`); a DRAFT disclosure paragraph for you to rewrite |
+| Produces | `discovery_agent/llm_claude_code.py`; a small backend switch (factory) where the pipeline builds its LLM; `.env` with `export DISCOVERY_BACKEND=claude-code` and `export DISCOVERY_MODEL=claude-sonnet-5-5` (gitignored); a smoke-test run in a temp folder (never in `outputs/`); a facts list for your instructor email (worksheet B2) |
 | You review | The agent loop, tools, validators, trace and transcripts are unchanged. The default path behaves as before. The tests are still 52 collected (20 failed, 32 passed before the gaps). Each call runs in an empty temp folder with no tools and no MCP. The trace shows `llm_call` events with token counts. The prompt text is never written to the trace. |
 | Done when | The smoke test (`--stop-after plan` into a mktemp `--out` folder) produces `search_plan.json`, `llm_call` trace events and a normal-looking planner transcript |
 | Commit | "P1b: opt-in Claude Code model backend (no gateway credentials)" |
@@ -548,13 +552,13 @@ Design (explain it first, then STOP for my OK):
 
 After my OK:
 - Implement it, show the full diff, and run python -m pytest tests/ -q (still 52 collected: 20 failed, 32 passed; gaps not done).
-- Create .env (gitignored, chmod 600) containing only: export DISCOVERY_BACKEND=claude-code
+- Create .env (gitignored, chmod 600) containing only these two lines: export DISCOVERY_BACKEND=claude-code / export DISCOVERY_MODEL=claude-sonnet-5-5
 - Smoke test without touching outputs/UC1:
     T=$(mktemp -d); source .venv/bin/activate && set -a && . ./.env && set +a && python -m discovery_agent run --use-case UC1 --stop-after plan --no-input --out "$T"
   Show the llm_call events in $T/trace.jsonl, the first 40 lines of $T/search_plan.json, and whether $T/transcripts/planner.json
   looks like a normal tool-use conversation. If it fails, read the transcript and fix the cause in the adapter, then re-test.
-- Draft in chat only (label it DRAFT) a short "Other decisions" paragraph for decisions.md disclosing the deviation: no gateway
-  credentials, what the backend does, the isolation flags, the model used, and what stays unchanged. I will write the final text.
+- List in chat only the facts my instructor email needs (worksheet B2): no gateway credentials, what the backend does, the isolation
+  flags, the model used, and what stays unchanged. Do not write the email or any decisions.md text; I write those.
 - Update work.md §1 and §2, then commit: "P1b: opt-in Claude Code model backend (no gateway credentials)".
 ```
 
@@ -605,7 +609,7 @@ At the end update work.md §1 and §2 (no decision wording), and commit: "P2: St
 | Done when | Every suggestion is decided and recorded, at least one accepted link has been inspected, and every refused host has been decided by you |
 
 **Message A: generate the script.** Paste the README prompt verbatim; this is rubric evidence that *you* generated it with Claude Code.
-> **Option B is decided (§7).** Add this sentence after the README prompt, in the same message: "If ANTHROPIC_BASE_URL or ANTHROPIC_AUTH_TOKEN is missing, fall back to running `claude -p --output-format json --tools WebSearch --allowedTools WebSearch --strict-mcp-config --no-session-persistence --json-schema <a schema for {answer: string, citations: [string]}>` from an empty temp folder, with the query on stdin; print the answer and the cited URLs, say which backend was used, and never print any token." Afterwards, record the deviation in decisions.md in your own words.
+> **Option B is decided (§7).** Add this sentence after the README prompt, in the same message: "If ANTHROPIC_BASE_URL or ANTHROPIC_AUTH_TOKEN is missing, fall back to running `claude -p --output-format json --tools WebSearch --allowedTools WebSearch --strict-mcp-config --no-session-persistence --json-schema <a schema for {answer: string, citations: [string]}>` from an empty temp folder, with the query on stdin; print the answer and the cited URLs, say which backend was used, and never print any token." Disclosure: your instructor email (worksheet B2).
 ```
 Create `scripts/web_search.py`. Use only the Python standard library (urllib, json, os) and add no dependencies. It takes one query argument. It sends a POST to `{ANTHROPIC_BASE_URL}/v1/chat/completions` (no `/v1` added to the base URL) with the header `Authorization: Bearer {ANTHROPIC_AUTH_TOKEN}` and a JSON body: `model` from `WEB_SEARCH_MODEL`, defaulting to `gemini-3.8-flash`; one user message containing the query; and `web_search_options: {}`. It prints the answer text, then the citation URLs from the response. If a variable is missing, exit with a message that names it. Never print the token or the full request.
 ```
@@ -1210,7 +1214,7 @@ Submit the zip in **Tiger Academy (Paradiso)**.
 | 14 | The reuse check "profiles accepted links for UC2" while "UC2 needs no gate file" | An accepted UC2 link needs `outputs/UC2/links.json` + `gate_decisions.json` + an allowlist host. Do it in the separate worktree (P11). |
 | 15 | `check` says "for each dataset link" but only tests that the gate file exists | Use the pre-check (P5) |
 | 16 | The Assignment and Helper Guide assume Claude Code runs on the gateway ("same values as Claude Code") | Optional (Q5); the pipeline works with `.env` either way |
-| 17 | The bundle assumes gateway credentials "Provided by email"; none were provided | The pipeline's model calls use the opt-in Claude Code backend (P1b), disclosed in decisions.md, the README notes and the PR. Step 2b follows option A or B (§7). |
+| 17 | The bundle assumes gateway credentials "Provided by email"; none were provided | The pipeline's model calls use the opt-in Claude Code backend (P1b) with `claude-sonnet-5-5`; Step 2b uses option B (§7). You tell the instructor by email (worksheet B2). |
 
 ---
 

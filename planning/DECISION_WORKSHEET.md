@@ -46,18 +46,18 @@ Everything **you** have to decide or write for this assignment, in the order you
 
 Options:
 - [ ] Make it private first (GitHub → repo → Settings → General → Danger Zone → Change visibility), then push *(Recommended)*
-- [ ] Push now, make it private later
+- [x] Push now, make it private later
 - [ ] Keep it public
 
 **B2. Tell the instructor that no credentials were provided, and how you worked around it?** When: now, or before P13.
-- [ ] Yes. Email them now: no gateway credentials; the pipeline uses the Claude Code backend; Step 2b uses the Claude web-search fallback *(Recommended)*
+- [x] Yes. Email them now: no gateway credentials; the pipeline uses the Claude Code backend; Step 2b uses the Claude web-search fallback *(Recommended)*. No need to disclose it anywhere.
 - [ ] No. Only disclose it in decisions.md, the README notes and the PR
 
 [YOU WRITE: the email text, if you send one]
 
 **B3. Model for the pipeline's agents.** When: P1b. Goes into: `.env` (`DISCOVERY_MODEL`).
 - [ ] Claude Code's default model (Opus 5.5): best quality, but it uses more of your plan's usage limit *(Recommended)*
-- [ ] `claude-sonnet-5-5`: cheaper and faster, but the agents may be less careful, which affects the 40-point automatic score
+- [x] `claude-sonnet-5-5`: cheaper and faster, but the agents may be less careful, which affects the 40-point automatic score
 
 **B4. Your reason for choosing Milan.** When: any time before P6. Goes into: `outputs/artifacts/decisions.md` → "Other decisions".
 - Background only, not your text:
@@ -68,14 +68,18 @@ Options:
   - the UCI prototype data comes from an unnamed Italian city.
 
 [YOU WRITE: the city, the coordinates (45.46, 9.19) and why you chose it. Mark it as an assumption.]
+Answer :- Milan, Italy (45.46° N, 9.19° E) is selected as the study city. Milan was chosen because it is located in the Po Valley, a region that frequently experiences poor air quality, particularly during periods of atmospheric stagnation. The city also experiences hot summers, making it suitable for examining both air pollution and heat-related weather conditions using a single weather setting. Milan is therefore assumed to represent the unnamed Italian city associated with the UCI prototype dataset.
 
 **B5. Disclose the two workarounds.** When: after P1b (backend) and after P3 (search fallback); Claude first lists the facts in chat. Goes into: decisions.md → "Other decisions", the README "Submission notes", and the PR description.
 
 [YOU WRITE: that no gateway credentials were provided, what you did instead and why, and what stayed unchanged in the pipeline]
+No need to write anywhere.
 
 [YOU WRITE: why Step 2b uses the fallback search, and how you checked every cited page yourself]
+*(Need some context)*
 
 **B6. Optional stretch: a third use case (UC3).**
+What is this?
 - [ ] No *(Recommended)*
 - [ ] Yes
 
@@ -84,7 +88,8 @@ Options:
 ## C. P2: Steps 0–2 for UC1 (the skill run)
 
 **C1. Step 0 will report the three gateway variables as missing.**
-- [ ] Answer "Intentional: the pipeline uses the Claude Code backend" and continue *(Recommended)*
+- [x] Answer "Intentional: the pipeline uses the Claude Code backend" and continue *(Recommended)*
+No need of reporting
 
 **C2. Confirm the UC1 needs table.** The skill stops and asks you. The needs:
 | Need | Description | Priority |
@@ -96,11 +101,11 @@ Options:
 | N5 | Patient-level clinic records | could |
 | N6 | National yearly PM2.5 deaths | could |
 
-- [ ] Confirm as is *(Recommended: the contract is provided, and changing it changes what is scored)*
+- [x] Confirm as is *(Recommended: the contract is provided, and changing it changes what is scored)*
 - [ ] Change it: [YOU WRITE: what and why]
 
 **C3. Dataset links for UC1.** The skill asks whether you have links.
-- [ ] Use the three prescribed links *(Recommended; the rubric requires them)*:
+- [x] Use the three prescribed links *(Recommended; the rubric requires them)*:
   - UCI 360 for N1, prototype window;
   - Eurostat `sdg_11_52` for N6, both windows;
   - Chicago for N1, prototype window, accepted on purpose so that its refusal is recorded.
