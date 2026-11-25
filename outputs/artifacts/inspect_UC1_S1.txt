@@ -1,0 +1,41 @@
+$ python -m discovery_agent tool inspect_dataset_link '{"url": "https://github.com/owid/owid-datasets/blob/master/datasets/Absolute%20deaths%20from%20ambient%20PM2.5%20air%20pollution-%20State%20of%20Global%20Air/datapackage.json"}' --use-case UC1
+{
+  "url": "https://github.com/owid/owid-datasets/blob/master/datasets/Absolute%20deaths%20from%20ambient%20PM2.5%20air%20pollution-%20State%20of%20Global%20Air/datapackage.json",
+  "canonical_ref": "raw.githubusercontent.com/owid/owid-datasets/master/datasets/Absolute%20deaths%20from%20ambient%20PM2.5%20air%20pollution-%20State%20of%20Global%20Air/datapackage.json",
+  "source_id": "link.githubusercontent_datapackage_js_f47f87",
+  "resolved_url": "https://raw.githubusercontent.com/owid/owid-datasets/master/datasets/Absolute%20deaths%20from%20ambient%20PM2.5%20air%20pollution-%20State%20of%20Global%20Air/datapackage.json",
+  "status": 200,
+  "content_type": "text/plain; charset=utf-8",
+  "content_length_header": "1313",
+  "last_modified_header": null,
+  "link_type": "json_api",
+  "dates_found": {},
+  "shape": {
+    "name": "Absolute deaths from ambient PM2.5 air pollution- State of Global Air",
+    "title": "Absolute deaths from ambient PM2.5 air pollution- State of Global Air",
+    "id": 380,
+    "description": "",
+    "sources": [
+      {
+        "name": "Absolute deaths from ambient PM2.5 air pollution",
+        "dataPublishedBy": "Health Effects Institute, State of Global Air 2017",
+        "dataPublisherSource": "Global Burden of Disease Study 2015. IHME, 2016",
+        "link": "www.stateofglobalair.org",
+        "retrievedDate": "07/04/2017",
+        "additionalInfo": null
+      }
+    ],
+    "owidTags": [
+      "Air Pollution"
+    ],
+    "resources": [
+      {
+        "path": "Absolute deaths from ambient PM2.5 air pollution- State of Global Air.csv",
+        "schema": {
+          "fields": "<list>"
+        }
+      }
+    ]
+  }
+}
+exit=0

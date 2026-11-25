@@ -1,0 +1,6 @@
+$ python -m discovery_agent tool inspect_dataset_link '{"url": "https://www.ncei.noaa.gov/products/land-based-station/integrated-surface-database"}' --use-case UC1
+{
+  "error": "DOMAIN_NOT_ALLOWLISTED",
+  "message": "DOMAIN_NOT_ALLOWLISTED: host 'www.ncei.noaa.gov' is not on config/allowlist.json. Do not try another route to it; record the source as unreachable and say which host would need approval."
+}
+exit=1

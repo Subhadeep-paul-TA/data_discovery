@@ -29,5 +29,47 @@
       "prototype"
     ],
     "note": "Hourly air-quality sensor data from a US city, found while searching for more hourly data."
+  },
+  {
+    "url": "https://github.com/owid/owid-datasets/blob/master/datasets/Absolute%20deaths%20from%20ambient%20PM2.5%20air%20pollution-%20State%20of%20Global%20Air/datapackage.json",
+    "need_ids": [
+      "N6"
+    ],
+    "target_windows": [
+      "prototype"
+    ],
+    "note": "Links are working, and the data looks validated and truatable."
+  },
+  {
+    "url": "https://ourworldindata.org/grapher/absolute-number-of-deaths-from-ambient-particulate-air-pollution?tab=map",
+    "need_ids": [
+      "N6"
+    ],
+    "target_windows": [
+      "prototype"
+    ],
+    "note": "Links are working, and the data looks validated and truatable."
+  },
+  {
+    "url": "https://meteostat.net/en/station/16080",
+    "need_ids": [
+      "N3"
+    ],
+    "target_windows": [
+      "prototype",
+      "production"
+    ],
+    "note": "Links are working, and the data looks validated and truatable."
+  },
+  {
+    "url": "https://www.ncei.noaa.gov/products/land-based-station/integrated-surface-database",
+    "need_ids": [
+      "N3"
+    ],
+    "target_windows": [
+      "prototype",
+      "production"
+    ],
+    "note": "Links are working, and the data looks validated and truatable."
   }
 ]
