@@ -139,61 +139,61 @@ Claude implements these; you approve the choices and review every change.
 
 ### G1: licence finder
 **E1. A page's structured data says the licence is "Unknown" or "Other".**
-- [ ] Treat that as final: no licence, which raises the LIC-UNKNOWN flag *(Recommended)*
+- [x] Treat that as final: no licence, which raises the LIC-UNKNOWN flag *(Recommended)*
 - [ ] Keep searching the rest of the page
 
 **E2. Two different licences appear on one page.**
-- [ ] Report no licence (ambiguous) and keep both in the evidence *(Recommended)*
+- [x] Report no licence (ambiguous) and keep both in the evidence *(Recommended)*
 - [ ] Take the first one found
 
 **E3. Which licences to recognise.**
-- [ ] Core set: Creative Commons family, CC0, ODbL / ODC-By / PDDL, UK OGL, MIT, Apache-2.0 *(Recommended)*
+- [x] Core set: Creative Commons family, CC0, ODbL / ODC-By / PDDL, UK OGL, MIT, Apache-2.0 *(Recommended)*
 - [ ] Core plus extras (GPL/BSD, older Creative Commons ports, per-file licences)
 
 **E4. Extra tests.**
-- [ ] Throwaway checks only, no new test files *(Recommended: the rubric expects exactly 52 tests)*
+- [x] Throwaway checks only, no new test files *(Recommended: the rubric expects exactly 52 tests)*
 - [ ] Add a new test file
 
 **E5. The G1 edge case for decisions.md.**
-- [ ] The Kaggle page whose licence is "Unknown" *(Recommended)*
+- [x] The Kaggle page whose licence is "Unknown" *(Recommended)*
 - [ ] Other: [YOU WRITE]
 
 [YOU WRITE after P4: the edge case, what the code does with it, and how it changes the licence field and the flags]
 
 ### G3: JSON-stat summary
 **E6. Country-code check.**
-- [ ] The full list of official two-letter country codes *(Recommended)*
+- [x] The full list of official two-letter country codes *(Recommended)*
 - [ ] A two-letter pattern plus a list of exceptions
 
 **E7. Finding the time and country dimensions.**
-- [ ] The format's role markers first, then the names "time"/"geo" *(Recommended)*
+- [x] The format's role markers first, then the names "time"/"geo" *(Recommended)*
 - [ ] Names only
 
 **E8. A single status flag given for the whole table counts as…**
-- [ ] every cell *(Recommended)*
+- [x] every cell *(Recommended)*
 - [ ] only the cells that have values
 
 **E9. The G3 edge case for decisions.md.**
-- [ ] A missing year: UC1's Eurostat table has no 2006, which raises no warning, unlike an empty latest year *(Recommended)*
+- [x] A missing year: UC1's Eurostat table has no 2006, which raises no warning, unlike an empty latest year *(Recommended)*
 - [ ] Other: [YOU WRITE]
 
 [YOU WRITE after P4: the edge case, what the code does with it, and how it changes the summary and the catalog record]
 
 **E10. The ungraded G2 (data-package summary).**
-- [ ] Leave it as a stub *(Recommended)*
+- [x] Leave it as a stub *(Recommended)*
 - [ ] Implement it
 
 ### G4: three deterministic rules
 **E11. Grain rule.**
-- [ ] Strict: any grain coarser than the need raises the flag; any tolerance belongs in the G5 calibration *(Recommended)*
+- [x] Strict: any grain coarser than the need raises the flag; any tolerance belongs in the G5 calibration *(Recommended)*
 - [ ] Tolerant
 
 **E12. Staleness when a source's start date is unknown.**
-- [ ] Skip, as the rule's own description says *(Recommended)*
+- [x] Skip, as the rule's own description says *(Recommended)*
 - [ ] Compute it anyway
 
 **E13. The contradiction rule reads…**
-- [ ] documentation and quality notes only *(Recommended)*
+- [x] documentation and quality notes only *(Recommended)*
 - [ ] also the sample findings
 
 [YOU WRITE after P4: for each rule, one UC1 or UC2 case where it changes the verdict, and why. This goes into decisions.md → "G4–G5".]
