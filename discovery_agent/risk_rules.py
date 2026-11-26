@@ -187,15 +187,20 @@ def rule_grain(record: dict, candidate: dict, uc: dict, settings: dict) -> list[
     return [_flag("COV-GRAIN-MISMATCH", f"Source grain {grain!r} is coarser than the minimum grain of: {', '.join(too_coarse)}")]
 
 
-# Negated mentions, removed before matching: "no missing values", "without missing data", "free of NaN",
-# "does not contain any null values", "none of the readings are missing" ("not only missing values" is not a negation).
-_NEGATED = re.compile(r"\b(?:no|not(?!\s+only)|zero|without|never|free\s+of|none\s+of\s+the)(?:\s+\w+){0,2}?\s+"
-                      r"(?:missing|null|nan|empty|absent)\w*", re.I)
-# The label form some pages use: "Has Missing Values? No", "Missing attribute values: none".
-_NEGATED_LABEL = re.compile(r"\bmissing\s+(?:\w+\s+)?values?\s*[?:]?\s*(?:no|none|false|0|n/a)\b", re.I)
+_GAP_NOUNS = r"(?:values?|data|readings?|measurements?|observations?|entries|records?|cells?|rows?|hours?|days?)"
+_GAP_WORD = r"(?:missing|null|nan|empty|absent)\w*"
+_GAP_ITEM = rf"{_GAP_WORD}(?:\s+{_GAP_NOUNS})?(?:\s*\(\s*{_GAP_WORD}\s*\))?"  # "missing", "null values", "missing values (NaN)"
+# Negated mentions, removed before matching: "no missing values", "doesn't contain any missing data", "free of NaN",
+# "none of the readings are missing", and lists: "no missing or null values", "no missing/NaN values", "no missing, null or
+# NaN values". Not negations: "not only missing values", and a comma alone ("No nulls, missing values appear as blanks").
+_NEGATED = re.compile(
+    r"(?:\b(?:no|not|zero|without|never|free\s+of|none\s+of\s+the)|\b\w+n['’]t)(?!\s+only\b)(?:\s+\w+){0,2}?\s+"
+    rf"{_GAP_ITEM}(?:(?:\s*,\s*{_GAP_ITEM})*(?:\s*/|\s+(?:or|and|nor)\b)\s*{_GAP_ITEM})*", re.I)
+# The label form, with its "?" or ":": "Has Missing Values? No", "Missing data: none", "Missing values: 0" or "0.0%" (not "0.5%").
+_NEGATED_LABEL = re.compile(rf"\bmissing\s+(?:\w+\s+)?{_GAP_NOUNS}\s*[?:]\s*(?:no|none|false|n/a|0(?:[.,]0+)?(?![.,]?\d))\b", re.I)
 # What describes missing values. A bare "missing" or "?" is not enough ("Licence is missing", "Has Missing Values? No").
 _MISSING_CUE = re.compile(
-    r"\bmissing\s+(?:\w+\s+)?(?:values?|data|readings?|measurements?|observations?|entries|records?|cells?|rows?|hours?|days?)\b"
+    rf"\bmissing\s+(?:\w+\s+)?{_GAP_NOUNS}\b"
     r"|\b(?:values?|data|readings?|measurements?|observations?|entries|records?)\s+(?:are|is|were|was)\s+(?:missing|absent)\b"
     r"|\babsence\s+of\s+(?:a\s+)?values?\b|\bnull\s+(?:values?|entries|cells)\b|(?-i:\b(?:NaN|nan|NAN)\b)"
     r"|(?<![\w.])[-\u2212](?:200|999|9999)(?:\.0+)?(?!\d|\.\d)"  # sentinel codes: -200, -999.0; not -2000 or -200.5
@@ -218,12 +223,19 @@ def rule_metadata_contradiction(record: dict, candidate: dict, uc: dict, setting
         for i, text in enumerate(texts):
             if not isinstance(text, str):
                 continue
-            cue = _MISSING_CUE.search(_NEGATED.sub(" ", _NEGATED_LABEL.sub(" ", text)))  # strip negations first, then match
+            # Strip negations first, then match. Blanking keeps every position, so the quote can be cut around the match.
+            cue = _MISSING_CUE.search(_NEGATED.sub(_blank, _NEGATED_LABEL.sub(_blank, text)))
             if cue:
+                start = max(0, cue.start() - 100)
+                quote = ("…" if start else "") + text[start:start + 300] + ("…" if start + 300 < len(text) else "")
                 return [_flag("DQ-METADATA-CONTRADICTION",
                               f"declared_metadata.has_missing_values is {value!r}, but {field}[{i}] describes missing values "
-                              f"({cue.group(0)!r}): {text[:300]!r}")]
+                              f"({cue.group(0)!r}): {quote!r}")]
     return []
+
+
+def _blank(m: re.Match) -> str:
+    return " " * len(m.group(0))
 
 
 RULES = [rule_licence, rule_agreement, rule_access, rule_payload, rule_pii, rule_owner, rule_status,
